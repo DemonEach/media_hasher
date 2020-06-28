@@ -51,14 +51,17 @@ fn is_img(path: &PathBuf) -> bool {
 
 fn rename_files_with_hash(paths: Vec<PathBuf>) {
     for path in paths {
-        let mut file = fs::File::open(&path).unwrap();
-        let file_buff: &mut [u8] = &mut [];
+        println!("Opening file: {}", &path.display());
         let mut hasher = Md5::new();
-        match file.read(file_buff) {
-            Ok(_res) => {}
+        let mut file = fs::File::open(&path).unwrap();
+        let file_size = file.metadata().unwrap().len();
+        let mut file_buff = vec![0; file_size as usize];
+        let cnt = match file.read(&mut file_buff[..]) {
+            Ok(bytes) => bytes,
             Err(_err) => panic!("Cannot read file {}", &path.display()),
         };
-        hasher.input(file_buff);
+        println!("READED BYTES: {}", cnt);
+        hasher.input(&mut file_buff[..]);
         let hash: String = hasher.result_str();
         let new_file_name = format!("{}.{}", hash, get_file_ext(&path));
         match rename(&path, &new_file_name) {
