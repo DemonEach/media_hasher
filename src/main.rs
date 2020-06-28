@@ -20,17 +20,13 @@ fn get_img_files(curr_dir_path: PathBuf) -> Vec<PathBuf> {
     let paths = fs::read_dir(curr_dir_path).unwrap();
 
     let mut result_files: Vec<PathBuf> = vec![];
-    println!("_______________________");
-    println!("Found this image files:");
     for entry in paths {
         if let Ok(entry) = entry {
             if is_img(&entry.path()) {
                 result_files.push(entry.path());
-                println!("{}", entry.path().display());
             }
         }
     }
-    println!("_______________________");
     return result_files;
 }
 
