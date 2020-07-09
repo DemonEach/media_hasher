@@ -12,7 +12,11 @@ fn main() -> Result<(), std::io::Error> {
     let curr_dir: PathBuf = current_dir().unwrap();
     println!("Current dir: {}", curr_dir.display());
     let paths = get_img_files(curr_dir);
-    rename_files_with_hash(paths);
+    if paths.len() != 0 {
+        rename_files_with_hash(paths);
+    } else {
+        println!("There is no img files in current folder!");
+    }
     Ok(())
 }
 
@@ -31,7 +35,10 @@ fn get_img_files(curr_dir_path: PathBuf) -> Vec<PathBuf> {
 }
 
 fn get_file_ext(path: &PathBuf) -> String {
-    return path.extension().unwrap().to_str().unwrap().to_owned();
+    match path.extension() {
+        Some(val) => return val.to_str().unwrap().to_owned(),
+        None => return String::default(),
+    };
 }
 
 fn is_img(path: &PathBuf) -> bool {
