@@ -45,7 +45,7 @@ fn is_img(path: &PathBuf) -> bool {
     if path.is_file() {
         let ext = get_file_ext(&path);
         match ext.as_str() {
-            "jpg" | "jpeg" | "gif" | "bmp" | "png" | "webp" => return true,
+            "jpg" | "jpeg" | "gif" | "bmp" | "png" | "webp" | "webm" | "tiff" => return true,
             _ => return false,
         };
     }
@@ -53,9 +53,9 @@ fn is_img(path: &PathBuf) -> bool {
 }
 
 fn rename_files_with_hash(paths: Vec<PathBuf>) {
+    let mut hasher = Md5::new();
     for path in paths {
         println!("Opening file: {}", &path.display());
-        let mut hasher = Md5::new();
         let mut file = fs::File::open(&path).unwrap();
         let file_size = file.metadata().unwrap().len();
         let mut file_buff = vec![0; file_size as usize];
