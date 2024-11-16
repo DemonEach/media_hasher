@@ -1,5 +1,5 @@
 [package]
-name = "img_hasher"
+name = "media_hasher"
 version = "0.1.0"
 authors = ["DemonEach <koreneffdmitrii@gmail.com>"]
 edition = "2018"
