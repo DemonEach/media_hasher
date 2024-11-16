@@ -25,25 +25,26 @@ impl OptionFlags {
 
 pub fn parse_args(args: Vec<String>) -> OptionFlags {
     let mut options: OptionFlags = OptionFlags::new();
+    println!("ARGS: {:?}", args);
 
     // starting from 1 since it's executable itself
     for i in 1..args.len() {
         match args.get(i).unwrap().as_str() {
-            "-d" | "--debug" => options.debug = true,
+            "-v" | "--verbose" => options.debug = true,
             "-h" | "--help" => {
                 options.help = true;
                 break;
             }
             "-f" | "--files" => {
-                let mut files: Vec<String> = Vec::new();
-                for i in i..args.len() {
+                for i in i+1..args.len() {
                     let file = args.get(i).unwrap();
+
                     // if we encounter other command such as 
                     if file.starts_with("-") || file.starts_with("--") {
-                        break;
+                        continue;
                     }
 
-                    files.push(file.clone());
+                    options.files.push(file.clone());
                 }
             }
             _ => {}

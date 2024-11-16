@@ -21,11 +21,11 @@ impl<'a> Executor<'a> {
         if self.options.get_files().is_empty() {
             self.rename_all();
         } else {
-            self.execute_specific_files();
+            self.rename_specific_files();
         }
     }
 
-    fn execute_specific_files(&self) {
+    fn rename_specific_files(&self) {
         if self.options.is_debug() {
             println!(
                 "Starting to renaiming files from file list: {:?}",
@@ -95,9 +95,11 @@ impl<'a> Executor<'a> {
     }
 
     fn rename_files_with_hash(&self, paths: Vec<PathBuf>) {
-        let mut hasher = Sha224::new();
-
         for path in paths {
+            // we have to create new instance on each file
+            // otherwise crash
+            let mut hasher = Sha224::new();
+
             if self.options.is_debug() {
                 println!("Opening file: {}", &path.display());
             }
@@ -114,7 +116,7 @@ impl<'a> Executor<'a> {
                 println!("READED BYTES: {}", cnt);
             }
 
-            hasher.input(&mut file_buff[..]);
+            hasher.input(&file_buff[..]);
             let hash: String = hasher.result_str();
             let new_file_name = format!("{}.{}", hash, Executor::get_file_ext(&path));
             match rename(&path, &new_file_name) {
